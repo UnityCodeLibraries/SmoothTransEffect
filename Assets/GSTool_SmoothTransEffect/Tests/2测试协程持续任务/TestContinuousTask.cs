@@ -12,6 +12,10 @@ public class TestContinuousTask : MonoBehaviour
     public GameObject Target;
     public bool StartToggle;
     public bool MovingToggle;
+    [Range(0, 100)]
+    public int MovingProcessPercent;
+
+    float totalDistance;
 
 
     // Start is called before the first frame update
@@ -26,18 +30,33 @@ public class TestContinuousTask : MonoBehaviour
         if (StartToggle)
         {
             StartToggle = false;
-            MovingToggle = true;
-
-            StartCoroutine(MoveTask());
+            if (!MovingToggle)
+            {
+                MovingToggle = true;
+                StartCoroutine(MoveTask());
+            }
         }
     }
 
 
     public IEnumerator MoveTask()
     {
+        //开始前配置
+        var selfPos = Origin.transform.position;
+        var targetPos = Target.transform.position;
+        totalDistance = Vector3.Distance(targetPos, selfPos);
+
         while (MovingToggle)
         {
             MoveAndDetection();
+
+            //计算进度
+            selfPos = Origin.transform.position;
+            targetPos = Target.transform.position;
+            var currentDistance = Vector3.Distance(targetPos, selfPos);
+            var processRate = (totalDistance - currentDistance) / totalDistance;
+            MovingProcessPercent = (int)Mathf.Round(processRate * 100);
+
             yield return new WaitForFixedUpdate();
         }
     }
