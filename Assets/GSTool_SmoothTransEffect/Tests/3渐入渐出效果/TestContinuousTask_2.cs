@@ -134,7 +134,7 @@ public class TestContinuousTask_2 : MonoBehaviour
         }
 
         //移动
-        if (areOpposite < 0) Debug.Log($"Move arrive.");
+        if (!MovingToggle) Debug.Log($"Move arrive.");
         else Debug.Log($"Move add x{movingInterpolation}.");
         Origin.transform.position = laterPos;
 
