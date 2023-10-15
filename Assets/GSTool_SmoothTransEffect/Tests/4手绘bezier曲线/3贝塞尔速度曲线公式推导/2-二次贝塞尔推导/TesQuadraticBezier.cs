@@ -68,7 +68,18 @@ public class TesQuadraticBezier : MonoBehaviour
         var y1 = p1.y;
         var y2 = p2.y;
 
-        var p = Mathf.Pow((1 - t), 2) * y0 + 2 * (1 - t) * t * y1 + Mathf.Pow(t, 2) * y2;
+        //var pp = 
+        //    Mathf.Pow((1 - t), 2) * y0 + 
+        //    2 * (1 - t) * t * y1 + 
+        //    Mathf.Pow(t, 2) * y2;
+
+        var p =
+            y0 * 1 * Mathf.Pow(1 - t, 2) * Mathf.Pow(t, 0) +
+            y1 * 2 * Mathf.Pow(1 - t, 1) * Mathf.Pow(t, 1) +
+            y2 * 1 * Mathf.Pow(1 - t, 0) * Mathf.Pow(t, 2);
+
+        var ppp = BezierCurveCalculator.CalculateBezierPointY(t, new Vector3[] { p0, p1, p2 });
+        //Debug.Log($"任意阶公式答案对比: [p: {p}, ppp: {ppp}, 是否匹配: {p == ppp}]");
         return new Vector3(p, 0 ,0);
     }
 

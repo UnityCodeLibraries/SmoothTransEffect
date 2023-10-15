@@ -63,7 +63,15 @@ public class TestLinearBezier : MonoBehaviour
         var y0 = p0.y;
         var y1 = p1.y;
 
-        var p = (1 - t) * y0 + t * y1;
+        //var pp = 
+        //    (1 - t) * y0 + 
+        //    t * y1;
+        var p =
+            y0 * 1 * Mathf.Pow(1-t, 1) * Mathf.Pow(t, 0) +
+            y1 * 1 * Mathf.Pow(1 - t, 0) * Mathf.Pow(t, 1);
+
+        var ppp = BezierCurveCalculator.CalculateBezierPointY(t, new Vector3[] { p0, p1 });
+        //Debug.Log($"任意阶公式答案对比: [p: {p}, ppp: {ppp}, 是否匹配: {p == ppp}]");
         return new Vector3(p, 0 ,0);
     }
 

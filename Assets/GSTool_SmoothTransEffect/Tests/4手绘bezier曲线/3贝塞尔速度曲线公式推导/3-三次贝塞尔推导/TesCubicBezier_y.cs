@@ -6,9 +6,9 @@ using UnityEngine;
 /// <summary>
 /// 绘制二次贝塞尔物体运动<para/>
 /// </summary>
-public class TesCubicBezier : MonoBehaviour
+public class TesCubicBezier_y : MonoBehaviour
 {
-    public CubicBezierProperty props;
+    public CubicBezierProperty_y props;
     public Transform Cube;
     public Transform Cube2;
     public Vector3 CubeRealPos;
@@ -129,7 +129,7 @@ public class TesCubicBezier : MonoBehaviour
 }
 
 
-[CustomEditor(typeof(TesCubicBezier))]
+[CustomEditor(typeof(TesCubicBezier_y))]
 public class MyCustomComponent3Editor : Editor
 {
     public override void OnInspectorGUI()
@@ -137,7 +137,7 @@ public class MyCustomComponent3Editor : Editor
         base.OnInspectorGUI();
 
         GUILayout.Space(25);
-        TesCubicBezier myComponent = (TesCubicBezier)target;
+        TesCubicBezier_y myComponent = (TesCubicBezier_y)target;
 
         if (GUILayout.Button(EditorGUIUtility.IconContent("PlayButton")))
         {
