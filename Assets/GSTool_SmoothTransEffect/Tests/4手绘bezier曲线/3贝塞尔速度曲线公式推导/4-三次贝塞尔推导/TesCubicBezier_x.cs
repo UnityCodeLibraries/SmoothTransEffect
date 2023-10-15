@@ -103,8 +103,9 @@ public class TesCubicBezier_x : MonoBehaviour
 
         var ppp = BezierCurveCalculator.CalculateBezierPointY(t, new Vector3[] { p0, p1, p2, p3 });
         //Debug.Log($"任意阶公式答案对比: [p: {p}, ppp: {ppp}, 是否匹配: {p == ppp}]");
+        //BezierCurveCalculator.CalculateBezierPointY(t, new Vector3[] { p0, p1, p2, p3 });
         //Debug.Log($"Y分量: {p}, Y增量: {p-oldPy}");oldPy = p;
-        return new Vector3(0, p, 0);
+        return new Vector3(0, ppp, 0);
     }
 
 

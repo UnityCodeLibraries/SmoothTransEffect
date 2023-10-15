@@ -7,6 +7,7 @@ using UnityEngine;
 /// • 在距离一小半之前加速, 在距离大半之后减速<para/>
 /// 不过最终效果还是不如意, 我也许该尝试手动绘制贝塞尔曲率<para/>
 /// </summary>
+
 public class TestContinuousTask_2 : MonoBehaviour
 {
     [Header("引用")]
