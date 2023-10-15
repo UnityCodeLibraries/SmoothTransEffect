@@ -9,22 +9,18 @@ using UnityEngine;
 public class TestContinuousTask_4 : MonoBehaviour
 {
     [Header("引用")]
-    public Transform Origin;
     public Transform Target;
-    public BezierCurvePreset bezier;
+    public Transform[] Origins;
     public bool start;
-    public bool task;
     public float timeScale = 3f;
-    public TransTaskUtils.Mode mode;
 
-    public Vector3 StartPos;
-    public float StartTime, CurrentTime, NormalizedTime;
+    public TransTaskUtils utils;
 
 
     private void Start()
     {
-        Origin = transform.GetChild(0);
-        Target = transform.GetChild(1);
+        utils = new TransTaskUtils();
+        Target = transform.GetChild(0);
     }
 
 
@@ -40,11 +36,21 @@ public class TestContinuousTask_4 : MonoBehaviour
 
     private void StartTransTask()
     {
-        var selfTrans = Origin;
-        var targetTrans = Target;
-        var timeScale = this.timeScale;
-        var points = bezier.ControlPoints;
-        StartCoroutine(TransTaskUtils.TranslationTask(selfTrans, targetTrans, timeScale, mode));
+        var modes = new TransTaskUtils.Mode[] {
+            TransTaskUtils.Mode.PINGPONG1, 
+            TransTaskUtils.Mode.EASE, 
+            TransTaskUtils.Mode.EASE_IN, 
+            TransTaskUtils.Mode.EASE_IN_OUT, 
+        };
+        for (int i = 0; i < Origins.Length; i++)
+        {
+            var selfTrans = Origins[i];
+            if (!selfTrans.gameObject.activeSelf) continue;
+            var mode = modes[i];
+            var targetTrans = Target;
+            var timeScale = this.timeScale;
+            StartCoroutine(utils.TranslationTask(selfTrans, targetTrans, timeScale, mode));
+        }
     }
 
 

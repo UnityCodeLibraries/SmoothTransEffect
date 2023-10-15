@@ -15,7 +15,7 @@ public class TransTaskUtils
     /// </summary>
     public enum Mode
     {
-        PINGPONG1, PINGPONG2
+        PINGPONG1, EASE, EASE_IN, EASE_IN_OUT
     }
 
     /// <summary>
@@ -25,16 +25,28 @@ public class TransTaskUtils
     {
         { Mode.PINGPONG1, new Vector3[]{
             new Vector3(0, 0), 
-            new Vector3(0f, 0.231f), 
-            new Vector3(0.288f, 0.925f), 
-            new Vector3(1.212f, 0.517f), 
-            new Vector3(0.995f, 0.038f), 
+            new Vector3(0f, .231f), 
+            new Vector3(.288f, .925f), 
+            new Vector3(1.212f, .517f), 
+            new Vector3(.995f, .038f), 
             new Vector3(1, 1)
         } }, 
-        { Mode.PINGPONG2, new Vector3[]{
+        { Mode.EASE, new Vector3[]{
             new Vector3(0, 1), 
-            new Vector3(0.141f, .755f), 
+            new Vector3(.141f, .755f), 
             new Vector3(1, .806f), 
+            new Vector3(1, 0)
+        } }, 
+        { Mode.EASE_IN, new Vector3[]{
+            new Vector3(0, 1), 
+            new Vector3(0, .7f), 
+            new Vector3(0, .7f), 
+            new Vector3(1, 0)
+        } }, 
+        { Mode.EASE_IN_OUT, new Vector3[]{
+            new Vector3(0, 1), 
+            new Vector3(0, .56f), 
+            new Vector3(1, .44f), 
             new Vector3(1, 0)
         } }, 
     };
@@ -48,7 +60,7 @@ public class TransTaskUtils
     /// <param name="timeScale"></param>
     /// <param name="mode"></param>
     /// <returns></returns>
-    public static IEnumerator TranslationTask(Transform selfTrans, Transform targetTrans, float timeScale, Mode mode = Mode.PINGPONG1)
+    public IEnumerator TranslationTask(Transform selfTrans, Transform targetTrans, float timeScale, Mode mode = Mode.PINGPONG1)
     {
         if (!Effects.ContainsKey(mode)) yield return null;
         yield return TranslationTask(selfTrans, targetTrans, timeScale, Effects[mode]);
@@ -62,9 +74,10 @@ public class TransTaskUtils
     /// <param name="timeScale"></param>
     /// <param name="controlPoints"></param>
     /// <returns></returns>
-    public static IEnumerator TranslationTask(Transform selfTrans, Transform targetTrans, float timeScale, Vector3[] controlPoints)
+    public IEnumerator TranslationTask(Transform selfTrans, Transform targetTrans, float timeScale, Vector3[] controlPoints)
     {
         var startTime = Time.time;
+        var startPos = selfTrans.position;
         while (true)
         {
             var currentTime = Time.time;
@@ -76,6 +89,7 @@ public class TransTaskUtils
 
             if (selfPos == targetPos)
             {
+                selfTrans.position = targetPos;
                 break;
             }
             yield return new WaitForFixedUpdate();
