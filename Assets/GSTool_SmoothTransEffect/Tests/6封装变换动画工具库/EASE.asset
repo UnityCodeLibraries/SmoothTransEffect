@@ -10,12 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13cf720b3211c45458e002bceaa54c57, type: 3}
-  m_Name: BezierCurvePreset
+  m_Name: EASE
   m_EditorClassIdentifier: 
   ControlPoints:
-  - {x: 0, y: 0, z: 0}
-  - {x: -0.004, y: 0.415, z: 0}
-  - {x: 0.984, y: 0.826, z: 0}
-  - {x: 0.34500003, y: -0.434, z: 0}
-  - {x: 0.695, y: -0.025, z: 0}
-  - {x: 0.99199986, y: 1, z: 0}
+  - {x: 0, y: 1, z: 0}
+  - {x: 0.141, y: 0.755, z: 0}
+  - {x: 1, y: 0.806, z: 0}
+  - {x: 1, y: 0, z: 0}

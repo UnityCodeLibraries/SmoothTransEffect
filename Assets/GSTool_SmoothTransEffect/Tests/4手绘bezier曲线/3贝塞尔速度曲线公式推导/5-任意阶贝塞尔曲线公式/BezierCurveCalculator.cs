@@ -10,6 +10,13 @@ public class BezierCurveCalculator : MonoBehaviour
 {
     public static float CalculateBezierPointY(float t, Vector3[] points) => CalculateBezierPoint(t, points).y;
     public static float CalculateBezierPointX(float t, Vector3[] points) => CalculateBezierPoint(t, points).x;
+    
+    /// <summary>
+    /// 根据给定的单位化时间分量t(0~1)从一组Bezier控制点组返回该分节点坐标p(t)
+    /// </summary>
+    /// <param name="t"></param>
+    /// <param name="controlPoints"></param>
+    /// <returns></returns>
     public static Vector3 CalculateBezierPoint(float t, Vector3[] controlPoints)
     {
         var n = controlPoints.Length - 1;
