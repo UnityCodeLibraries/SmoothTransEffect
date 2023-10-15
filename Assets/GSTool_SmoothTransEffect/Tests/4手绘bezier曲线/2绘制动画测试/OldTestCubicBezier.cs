@@ -6,9 +6,9 @@ using UnityEngine;
 /// <summary>
 /// 绘制三次贝塞尔曲线图示<para/>
 /// </summary>
-public class TestCubicBezier : MonoBehaviour
+public class OldTestCubicBezier : MonoBehaviour
 {
-    public CubicBezierProperty bezier;
+    public OldCubicBezierProperty bezier;
     public Transform Cube;
     public float journeyDuration = 3f;
     public float journeyTime;
@@ -55,7 +55,7 @@ public class TestCubicBezier : MonoBehaviour
 
     }
 
-    Vector3 EvaluateCubicBezier(CubicBezierProperty bezier, float t)
+    Vector3 EvaluateCubicBezier(OldCubicBezierProperty bezier, float t)
     {
         Vector2 p0 = bezier.StartPoint.position;
         Vector2 p1 = bezier.ControlPoint1.position;
@@ -81,7 +81,7 @@ public class TestCubicBezier : MonoBehaviour
     Vector2 targetCurvePoint = new Vector2(0.5f, 0.5f);
     Vector2 startCurvePoint = new Vector2(0, 0);
     // 在 TransCube 中使用 EvaluateCubicBezier 计算 x 和 y 分量
-    private void TransCube(float journeyNormalizedTime, CubicBezierProperty bezier)
+    private void TransCube(float journeyNormalizedTime, OldCubicBezierProperty bezier)
     {
         var t = journeyNormalizedTime;
         var point = EvaluateCubicBezier(bezier, t);

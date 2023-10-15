@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// 绘制三次贝塞尔曲线图示<para/>
 /// </summary>
-public class CubicBezierProperty : MonoBehaviour
+public class OldCubicBezierProperty : MonoBehaviour
 {
     public Transform StartPoint;
     public Transform EndPoint;
