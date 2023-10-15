@@ -3,7 +3,9 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// 协程移动到目标位置并停下, 并在Inspector面板有一个进度条<para/>
+/// 根据距离的加速度与减速度: <para/>
+/// • 在距离一小半之前加速, 在距离大半之后减速<para/>
+/// 不过最终效果还是不如意, 我也许该尝试手动绘制贝塞尔曲率<para/>
 /// </summary>
 public class TestContinuousTask_2 : MonoBehaviour
 {
