@@ -13,6 +13,7 @@ public class TestContinuousTask_4 : MonoBehaviour
     public Transform[] Origins;
     public bool start;
     public float journeyDuration = 3f;
+    public float distance = 1f;
 
     public TransTaskUtils utils;
 
@@ -37,10 +38,10 @@ public class TestContinuousTask_4 : MonoBehaviour
     private void StartTransTask()
     {
         var modes = new TransTaskUtils.Mode[] {
-            TransTaskUtils.Mode.PINGPONG1, 
+            TransTaskUtils.Mode.LINEAR, 
             TransTaskUtils.Mode.EASE, 
             TransTaskUtils.Mode.EASE_IN, 
-            TransTaskUtils.Mode.EASE_IN_OUT, 
+            TransTaskUtils.Mode.EASE, 
         };
         for (int i = 0; i < Origins.Length; i++)
         {
@@ -49,8 +50,8 @@ public class TestContinuousTask_4 : MonoBehaviour
             var mode = modes[i];
             var targetTrans = Target;
             var timeScale = this.journeyDuration;
-            //StartCoroutine(utils.TranslationTask(selfTrans, targetTrans, timeScale, mode));
-            StartCoroutine(utils.TranslationTask2(selfTrans, targetTrans, timeScale, mode));
+            var dir = new Vector3(1, 0, 0);
+            StartCoroutine(utils.TranslateAnimTask(selfTrans, dir, distance, timeScale, mode));
         }
     }
 

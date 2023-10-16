@@ -16,7 +16,7 @@ public class TransTaskUtils
     /// </summary>
     public enum Mode
     {
-        PINGPONG1, EASE, EASE_IN, EASE_IN_OUT
+        LINEAR, EASE, EASE_IN, EASE_IN_OUT1
     }
 
     /// <summary>
@@ -24,35 +24,9 @@ public class TransTaskUtils
     /// </summary>
     public static IDictionary<Mode, Vector3[]> Effects = new Dictionary<Mode, Vector3[]>()
     {
-        { Mode.PINGPONG1, new Vector3[]{
-            new Vector3(0, 0), 
-            new Vector3(0f, .231f), 
-            new Vector3(.288f, .925f), 
-            new Vector3(1.212f, .517f), 
-            new Vector3(.995f, .038f), 
-            new Vector3(1, 1)
-        } }, 
-        { Mode.EASE, new Vector3[]{
-            new Vector3(0, 1), 
-            new Vector3(.141f, .755f), 
-            new Vector3(1, .806f), 
-            new Vector3(1, 0)
-        } }, 
-        { Mode.EASE_IN, new Vector3[]{
-            new Vector3(0, 1), 
-            new Vector3(0, .7f), 
-            new Vector3(0, .7f), 
-            new Vector3(1, 0)
-        } }, 
-        //{ Mode.EASE_IN_OUT, new Vector3[]{
-        //    new Vector3(0, 1), 
-        //    new Vector3(-0.004f, -1.11f), 
-        //    new Vector3(0.351f, 0.198f), 
-        //    new Vector3(1.307f, 1.337f), 
-        //    new Vector3(1, 2.708f),
-        //    new Vector3(1, 0),
-        //} }, 
-        { Mode.EASE_IN_OUT, LoadEffectData("Assets/GSTool_SmoothTransEffect/Tests/6封装变换动画工具库/EASE_IN_OUT.asset") },
+        { Mode.LINEAR, LoadEffectData("Assets/GSTool_SmoothTransEffect/Tests/6封装变换动画工具库/LINEAR.asset") },
+        { Mode.EASE, LoadEffectData("Assets/GSTool_SmoothTransEffect/Tests/6封装变换动画工具库/EASE.asset") },
+        { Mode.EASE_IN, LoadEffectData("Assets/GSTool_SmoothTransEffect/Tests/6封装变换动画工具库/EASE_IN.asset") },
 };
 
 
@@ -86,7 +60,7 @@ public class TransTaskUtils
     /// <param name="timeScale"></param>
     /// <param name="mode"></param>
     /// <returns></returns>
-    public IEnumerator TranslationTask(Transform selfTrans, Transform targetTrans, float timeScale, Mode mode = Mode.PINGPONG1)
+    public IEnumerator TranslationTask(Transform selfTrans, Transform targetTrans, float timeScale, Mode mode = Mode.LINEAR)
     {
         if (!Effects.ContainsKey(mode)) yield return null;
         yield return TranslationTask(selfTrans, targetTrans, timeScale, Effects[mode]);
@@ -133,38 +107,34 @@ public class TransTaskUtils
     /// <param name="journeyDuration"></param>
     /// <param name="mode"></param>
     /// <returns></returns>
-    public IEnumerator TranslationTask2(Transform selfTrans, Transform targetTrans, float journeyDuration, Mode mode = Mode.PINGPONG1)
+    public IEnumerator TranslationTask2(Transform selfTrans, Transform targetTrans, float journeyDuration, Mode mode = Mode.LINEAR)
     {
         if (!Effects.ContainsKey(mode)) yield return null;
         var controlPoints = Effects[mode];
-        var startTime = Time.time;
+        var normalizedTime = 0f;
         var startPos = selfTrans.position;
         var startVel = 0f;
         var currentVel = 0f;
-        var velMultiple = 3f;
+        var velMultiple = 1f;
         var oldDir = Vector3.zero;
-        var oldJourneyTime = 0f;
+        var oldNormaliz = 0f;
+        var oldAccelerationTimeRate = Vector3.zero;
         while (true)
         {
             var stepLength = Time.fixedDeltaTime / journeyDuration;
             //Debug.Log($"stepLength: {stepLength}");
 
-            var currentTime = Time.time;
-            var journeyTime = currentTime - startTime;
-            if (journeyTime > journeyDuration) 
-                journeyTime = journeyDuration;
+            normalizedTime += stepLength;
+            if (normalizedTime > journeyDuration) normalizedTime = journeyDuration;
 
-            var oldAccelerationTimeRate = oldJourneyTime == 0 ? 0 : BezierCurveCalculator.CalculateBezierPointX(oldJourneyTime / journeyDuration, controlPoints);
-            var currentAccelerationTimeRate = BezierCurveCalculator.CalculateBezierPointX(journeyTime / journeyDuration, controlPoints);
+            var currentAccelerationTimeRate = BezierCurveCalculator.CalculateBezierPoint(normalizedTime, controlPoints);
             var accelerationTimeRate = currentAccelerationTimeRate - oldAccelerationTimeRate;
-            var planAccelerationTimeRate = journeyTime - oldJourneyTime;
-            oldJourneyTime = journeyTime;
+            var k = accelerationTimeRate.x==0?0:accelerationTimeRate.y / accelerationTimeRate.x;
+            oldAccelerationTimeRate = currentAccelerationTimeRate;
 
-            var finalAccelerationTimeRate = planAccelerationTimeRate == 0?0:
-                (accelerationTimeRate * 2 / planAccelerationTimeRate);
-            var acceleration = finalAccelerationTimeRate * velMultiple;
+            var acceleration = k * velMultiple;
 
-            //Debug.Log($"finalAccelerationTimeRate: {finalAccelerationTimeRate}");
+            Debug.Log($"acceleration: {acceleration}");
 
             var selfPos = selfTrans.position;
             var targetPos = targetTrans.position;
@@ -174,7 +144,7 @@ public class TransTaskUtils
             var laterPos = selfPos + transAmount;
             var laterDir = (targetPos - laterPos).normalized;
 
-            if (Vector3.Dot(currentDir, laterDir) < 0)
+            if (Vector3.Dot(currentDir, laterDir) < 0 || normalizedTime >= journeyDuration)
             {
                 selfTrans.position = targetPos;
                 break;
@@ -195,6 +165,93 @@ public class TransTaskUtils
             //}
             yield return new WaitForFixedUpdate();
         }
+    }
+
+
+    /// <summary>
+    /// 某方向位移动画任务: 指定自身trans属性, 位移方向, 位移距离, 动画时长, 动画速度效果(值曲线模式)
+    /// </summary>
+    /// <param name="selfTrans"></param>
+    /// <param name="targetTrans"></param>
+    /// <param name="journeyDuration"></param>
+    /// <param name="mode"></param>
+    /// <returns></returns>
+    public IEnumerator TranslateAnimTask(Transform selfTrans, Vector3 direction, float transitionDistance, float journeyDuration, Mode mode = Mode.LINEAR)
+    {
+        if (!Effects.ContainsKey(mode)) yield return null;
+        var controlPoints = Effects[mode];
+        double normalizedTime = 0;
+        var oldAccelerationTimeRate = Vector3.zero;
+        var resolution = 500;  //采样率
+        double startTime = Time.time;
+        float accelerationCurveScale = CalculateBezierCurveScale(controlPoints, transitionDistance, resolution);
+        var transitionTime = resolution / journeyDuration;
+        float deltatime = 1f / resolution;
+        double planStepLength = 1f / resolution / journeyDuration;
+        double lastTime = 0f;
+        double time = 0;
+        Debug.Log(startTime);
+        while (true) 
+        { 
+            //Debug.Log($"stepLength: {stepLength}");
+            time += planStepLength;
+            var currentTime = time;
+
+            double stepLength = currentTime - lastTime;
+            lastTime = currentTime;
+            var normalizedStepLength = stepLength;
+            normalizedTime += normalizedStepLength;
+            if (normalizedTime > 1)
+                normalizedTime = 1;
+
+            var currentAccelerationTimeRate = BezierCurveCalculator.CalculateBezierPoint((float)normalizedTime, controlPoints);
+            float k = CalculatePointsK(currentAccelerationTimeRate, oldAccelerationTimeRate);
+            oldAccelerationTimeRate = currentAccelerationTimeRate;
+
+            var acceleration = k * accelerationCurveScale / journeyDuration;// * transitionDistance * normalizedStepLength * transitionTimes;
+            var transAmount = direction * (float)acceleration;
+            selfTrans.position += transAmount;
+            //Debug.Log($"normalizedTime: {normalizedTime}, acceleration: {acceleration}, selfTrans.position: {selfTrans.position}");
+
+            if (normalizedTime >= 1)
+            {
+                break;
+            }
+            yield return new WaitForSecondsRealtime(deltatime);
+        }
+        var endTime = Time.time;
+        //Debug.Log($"endTime: {endTime}, continuousTime: {endTime-startTime}");
+    }
+
+
+    private float CalculatePointsK(Vector3 currentAccelerationTimeRate, Vector3 oldAccelerationTimeRate)
+    {
+        var accelerationTimeRate = currentAccelerationTimeRate - oldAccelerationTimeRate;
+        var k = accelerationTimeRate.x == 0 ? 0 : accelerationTimeRate.y / accelerationTimeRate.x;
+        return k;
+    }
+
+
+    private float CalculateBezierCurveTransAmount(Vector3[] points, float resolution)
+    {
+        float totalTransAmount = 0;
+        var previousPoint = points[0];
+        for (int i = 1; i <= resolution; i++)
+        {
+            var t = i / resolution;
+            var currentPoint = BezierCurveCalculator.CalculateBezierPoint(t, points);
+            totalTransAmount += CalculatePointsK(currentPoint, previousPoint);
+            previousPoint = currentPoint;
+        }
+        return totalTransAmount;
+    }
+
+
+    private float CalculateBezierCurveScale(Vector3[] points, float distance, float resolution)
+    {
+        var totalTransAmount = CalculateBezierCurveTransAmount(points, resolution);
+        var scale = distance / totalTransAmount;
+        return scale;
     }
 
 

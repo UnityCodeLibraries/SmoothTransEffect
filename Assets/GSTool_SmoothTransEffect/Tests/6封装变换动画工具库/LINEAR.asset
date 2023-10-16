@@ -10,14 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13cf720b3211c45458e002bceaa54c57, type: 3}
-  m_Name: EASE_IN_OUT
+  m_Name: LINEAR
   m_EditorClassIdentifier: 
   ControlPoints:
-  - {x: 0, y: 1, z: 0}
-  - {x: 0, y: -0.721, z: 0}
-  - {x: 0.53, y: -0.615, z: 0}
-  - {x: -1.853, y: -0.281, z: 0}
-  - {x: 7.993, y: 3.498, z: 0}
-  - {x: 2.108, y: 2.961, z: 0}
-  - {x: 1, y: 0.557, z: 0}
-  - {x: 1, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 1, y: 1, z: 0}

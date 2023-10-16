@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: EASE
   m_EditorClassIdentifier: 
   ControlPoints:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0.475, y: 0, z: 0}
   - {x: 0, y: 1, z: 0}
-  - {x: 0.141, y: 0.755, z: 0}
-  - {x: 1, y: 0.806, z: 0}
-  - {x: 1, y: 0, z: 0}
+  - {x: 0.495, y: 1, z: 0}
+  - {x: 1, y: 1, z: 0}
