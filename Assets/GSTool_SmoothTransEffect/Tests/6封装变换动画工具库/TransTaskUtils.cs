@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GoldSprite.GSTools.BezierCurveAnim;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -169,7 +170,8 @@ public class TransTaskUtils
 
 
     /// <summary>
-    /// 某方向位移动画任务: 指定自身trans属性, 位移方向, 位移距离, 动画时长, 动画速度效果(值曲线模式)
+    /// 某方向位移动画任务: 指定自身trans属性, 位移方向, 位移距离, 动画时长, 动画速度效果(值曲线模式)<para/>
+    /// 当前动画时长会超时(时长与距离无法同时校准, 这是由于Unity的性能原因)
     /// </summary>
     /// <param name="selfTrans"></param>
     /// <param name="targetTrans"></param>
