@@ -12,7 +12,7 @@ public class TestContinuousTask_4 : MonoBehaviour
     public Transform Target;
     public Transform[] Origins;
     public bool start;
-    public float timeScale = 3f;
+    public float journeyDuration = 3f;
 
     public TransTaskUtils utils;
 
@@ -48,8 +48,9 @@ public class TestContinuousTask_4 : MonoBehaviour
             if (!selfTrans.gameObject.activeSelf) continue;
             var mode = modes[i];
             var targetTrans = Target;
-            var timeScale = this.timeScale;
-            StartCoroutine(utils.TranslationTask(selfTrans, targetTrans, timeScale, mode));
+            var timeScale = this.journeyDuration;
+            //StartCoroutine(utils.TranslationTask(selfTrans, targetTrans, timeScale, mode));
+            StartCoroutine(utils.TranslationTask2(selfTrans, targetTrans, timeScale, mode));
         }
     }
 

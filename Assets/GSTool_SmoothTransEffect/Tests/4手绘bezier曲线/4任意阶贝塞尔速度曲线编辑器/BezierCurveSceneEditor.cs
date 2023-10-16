@@ -71,7 +71,11 @@ public class BezierCurveSceneEditor : MonoBehaviour
     Vector3[] pathPoints;
     private void OnDrawGizmos()
     {
-        if (preset == null) return;
+        if (DetectNull(preset, "", LogType.Error))
+        {
+            this.gameObject.SetActive(false);
+            return;
+        }
         Initialized();
         UpdateDatas();
         var center = transform.position;
@@ -133,6 +137,39 @@ public class BezierCurveSceneEditor : MonoBehaviour
         targetMovementPos.x += journeyLength;
         var currentMovementPos = Vector3.Lerp(startMovementPos, targetMovementPos, XT);
         Gizmos.DrawCube(currentMovementPos, cubeSize);
+    }
+
+
+    /// <summary>
+    /// 空指针检测, 用于检测配置
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <param name="mes"></param>
+    /// <param name="logType"></param>
+    private bool DetectNull<T>(T obj, string mes="", LogType logType=LogType.Log)
+    {
+        if (obj == null)
+        {
+            if (mes == null || mes == "") mes = $"{typeof(T)}变量为空, 请检查配置";
+            var logMes = $"[异常-{GetType().Name}]: {mes}.";
+            switch (logType)
+            {
+                case LogType.Error:
+                    Debug.LogError(logMes);
+                    break;
+                case LogType.Warning:
+                    Debug.LogWarning(logMes);
+                    break;
+                case LogType.Log:
+                    Debug.Log(logMes);
+                    break;
+                default:
+                    Debug.LogError("错误的LogType类型");
+                    break;
+            }
+            return true;
+        }
+        return false;
     }
 
 
